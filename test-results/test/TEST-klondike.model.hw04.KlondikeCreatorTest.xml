@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="klondike.model.hw04.KlondikeCreatorTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2025-10-21T16:16:56.755Z" hostname="tims-MacBook-Air.local" time="0.002">
+  <properties/>
+  <testcase name="testCreateWithNull" classname="klondike.model.hw04.KlondikeCreatorTest" time="0.0"/>
+  <testcase name="testFactoryModelsAreIndependent" classname="klondike.model.hw04.KlondikeCreatorTest" time="0.001"/>
+  <testcase name="testCreateBasicKlondike" classname="klondike.model.hw04.KlondikeCreatorTest" time="0.0"/>
+  <testcase name="testCreateWhiteheadKlondike" classname="klondike.model.hw04.KlondikeCreatorTest" time="0.0"/>
+  <testcase name="testWhiteheadKlondikeFromFactory" classname="klondike.model.hw04.KlondikeCreatorTest" time="0.0"/>
+  <testcase name="testMultipleCallsCreateNewInstances" classname="klondike.model.hw04.KlondikeCreatorTest" time="0.001"/>
+  <testcase name="testBasicKlondikeFromFactory" classname="klondike.model.hw04.KlondikeCreatorTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

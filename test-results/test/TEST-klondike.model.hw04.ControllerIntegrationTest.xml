@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="klondike.model.hw04.ControllerIntegrationTest" tests="24" skipped="0" failures="0" errors="0" timestamp="2025-10-21T16:16:56.722Z" hostname="tims-MacBook-Air.local" time="0.029">
+  <properties/>
+  <testcase name="testKlondikeCreatorNullType" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.006"/>
+  <testcase name="testControllerNoInputWhitehead" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.007"/>
+  <testcase name="testKlondikeCreatorWhiteheadBehavior" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.0"/>
+  <testcase name="testControllerStartsWhiteheadGame" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.0"/>
+  <testcase name="testControllerStartsBasicGame" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.0"/>
+  <testcase name="testKlondikeCreatorWhitehead" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.0"/>
+  <testcase name="testControllerInvalidCommandWhitehead" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.0"/>
+  <testcase name="testKlondikeCreatorBasicBehavior" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.0"/>
+  <testcase name="testControllerCaseInsensitiveCommandsWhitehead" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.001"/>
+  <testcase name="testControllerWithDifferentPileConfigurations" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.001"/>
+  <testcase name="testControllerMoveDrawWhitehead" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.0"/>
+  <testcase name="testControllerMovePileWhitehead" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.001"/>
+  <testcase name="testControllerMoveToFoundationWhitehead" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.002"/>
+  <testcase name="testControllerDiscardDrawWhitehead" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.001"/>
+  <testcase name="testControllerInvalidParameterWhitehead" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.001"/>
+  <testcase name="testControllerInvalidDeckWhitehead" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.0"/>
+  <testcase name="testControllerInvalidMoveWhitehead" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.001"/>
+  <testcase name="testControllerNullModelWhitehead" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.0"/>
+  <testcase name="testControllerWorksWithBothModels" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.001"/>
+  <testcase name="testControllerMoveDrawToFoundationWhitehead" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.001"/>
+  <testcase name="testKlondikeCreatorBasic" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.0"/>
+  <testcase name="testControllerMultipleCommandsWhitehead" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.002"/>
+  <testcase name="testControllerWithShuffledDeckWhitehead" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.0"/>
+  <testcase name="testControllerQuitShowsScoreWhitehead" classname="klondike.model.hw04.ControllerIntegrationTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="klondike.model.hw04.WhiteheadKlondikeTest" tests="29" skipped="0" failures="0" errors="0" timestamp="2025-10-21T16:16:56.763Z" hostname="tims-MacBook-Air.local" time="0.014">
+  <properties/>
+  <testcase name="testMoveToFoundationAce" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.001"/>
+  <testcase name="testStartGameWithShuffle" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.0"/>
+  <testcase name="testIsCardVisibleInvalidCard" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.002"/>
+  <testcase name="testGameNotStartedInitially" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.002"/>
+  <testcase name="testMoveToFoundationInvalidFoundation" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.001"/>
+  <testcase name="testStartGameTwice" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.0"/>
+  <testcase name="testStartGameValid" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.0"/>
+  <testcase name="testMovePileSameSourceAndDest" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.0"/>
+  <testcase name="testMoveDrawToEmptyPile" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.001"/>
+  <testcase name="testCannotMoveMultipleCardsDifferentSuits" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.0"/>
+  <testcase name="testMovePileInvalidSourcePile" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.001"/>
+  <testcase name="testMoveMultipleCardsSameSuit" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.0"/>
+  <testcase name="testGetCardAtInvalidCard" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.0"/>
+  <testcase name="testAllCardsVisibleInWhitehead" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.0"/>
+  <testcase name="testMovePileTooManyCards" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.001"/>
+  <testcase name="testAnyCardCanGoOnEmptyPile" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.0"/>
+  <testcase name="testMoveDrawInvalidPile" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.0"/>
+  <testcase name="testCanStackSameColorBlackOnBlack" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.001"/>
+  <testcase name="testStartGameInvalidNumDraw" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.0"/>
+  <testcase name="testStartGameInvalidNumPiles" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.0"/>
+  <testcase name="testStartGameNullDeck" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.0"/>
+  <testcase name="testGetPileHeight" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.001"/>
+  <testcase name="testStartGameEmptyDeck" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.0"/>
+  <testcase name="testGetDrawCards" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.0"/>
+  <testcase name="testMoveToFoundationNonAceToEmpty" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.001"/>
+  <testcase name="testStartGameTooManyPilesForDeck" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.0"/>
+  <testcase name="testCanStackSameColorRedOnRed" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.0"/>
+  <testcase name="testMoveDrawInvalidColor" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.0"/>
+  <testcase name="testCannotStackDifferentColors" classname="klondike.model.hw04.WhiteheadKlondikeTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
