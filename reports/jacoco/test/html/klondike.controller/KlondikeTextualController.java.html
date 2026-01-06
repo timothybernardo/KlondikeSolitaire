@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KlondikeTextualController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">easygo</a> &gt; <a href="index.source.html" class="el_package">klondike.controller</a> &gt; <span class="el_source">KlondikeTextualController.java</span></div><h1>KlondikeTextualController.java</h1><pre class="source lang-java linenums">package klondike.controller;
+
+import java.io.IOException;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Scanner;
+import klondike.model.hw02.Card;
+import klondike.model.hw02.KlondikeModel;
+import klondike.view.KlondikeTextualView;
+
+/**
+ * Implements the KlondikeController interface with a Readable that reads from input and
+ * an Appendable that appends the game's output.
+ */
+public class KlondikeTextualController implements KlondikeController {
+  private final Readable rd;
+  private final Appendable ap;
+
+  /**
+   * Custom exception to signal user wants to quit.
+   */
+<span class="fc" id="L22">  private class QuitException extends RuntimeException {</span>
+  }
+
+  /**
+   * A textual controller for the Klondike solitaire game.
+   * This controller handles user input from a Readable source and outputs game state
+   * to an Appendable destination.
+   *
+   * @param rd input coming from the user
+   * @param ap output sent to the user
+   * @throws IllegalArgumentException if Readable or Appendable objects are null.
+   */
+<span class="fc" id="L34">  public KlondikeTextualController(Readable rd, Appendable ap) throws IllegalArgumentException {</span>
+<span class="pc bpc" id="L35" title="2 of 4 branches missed.">    if (rd == null || ap == null) {</span>
+<span class="nc" id="L36">      throw new IllegalArgumentException(&quot;Readable and Appendable cannot be null.&quot;);</span>
+    }
+<span class="fc" id="L38">    this.rd = rd;</span>
+<span class="fc" id="L39">    this.ap = ap;</span>
+<span class="fc" id="L40">  }</span>
+
+  /**
+   * Reads the next integer from input, retrying on invalid input.
+   * If the user enters 'q' or 'Q', throws a QuitException.
+   * If the user enters non-integer input, prompts for re-entry.
+   *
+   * @param scan the Scanner to read from
+   * @return the integer value
+   * @throws QuitException if user enters 'q' or 'Q'
+   * @throws IOException   if output fails
+   */
+  private int readNextInt(Scanner scan) throws IOException, QuitException {
+    try {
+<span class="fc" id="L54">      return scan.nextInt();</span>
+<span class="fc" id="L55">    } catch (InputMismatchException ex) {</span>
+<span class="fc" id="L56">      String input = scan.next();</span>
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">      if (input.equalsIgnoreCase(&quot;q&quot;)) {</span>
+<span class="nc" id="L58">        throw new QuitException();</span>
+      }
+<span class="fc" id="L60">      ap.append(&quot;Re-enter value: &quot;);</span>
+<span class="fc" id="L61">      return readNextInt(scan);</span>
+    }
+  }
+
+  @Override
+  public &lt;C extends Card&gt; void playGame(KlondikeModel&lt;C&gt; model, List&lt;C&gt; deck, boolean shuffle,
+                                        int numRows, int numDraw)
+      throws IllegalArgumentException, IllegalStateException {
+<span class="fc bfc" id="L69" title="All 2 branches covered.">    if (model == null) {</span>
+<span class="fc" id="L70">      throw new IllegalArgumentException(&quot;Model cannot be null&quot;);</span>
+    }
+
+<span class="fc" id="L73">    startGame(model, deck, shuffle, numRows, numDraw);</span>
+<span class="fc" id="L74">    KlondikeTextualView view = new KlondikeTextualView(model, ap);</span>
+<span class="fc" id="L75">    renderGameState(model, view);</span>
+
+<span class="fc" id="L77">    Scanner scan = new Scanner(rd);</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">    while (!model.isGameOver()) {</span>
+      try {
+<span class="fc" id="L80">        processGameCommand(model, view, scan);</span>
+<span class="fc" id="L81">      } catch (QuitException e) {</span>
+<span class="fc" id="L82">        handleQuit(model, view);</span>
+<span class="fc" id="L83">        return;</span>
+<span class="nc" id="L84">      } catch (IOException e) {</span>
+<span class="nc" id="L85">        throw new IllegalStateException(&quot;Failed to transmit output&quot;);</span>
+<span class="fc" id="L86">      }</span>
+    }
+
+<span class="nc" id="L89">    displayGameEnd(model, view);</span>
+<span class="nc" id="L90">  }</span>
+
+  /**
+   * Processes a single game command from the user.
+   * Reads the command and delegates to the appropriate execution method.
+   *
+   * @param &lt;C&gt;   the card type
+   * @param model the game model
+   * @param view  the textual view for rendering
+   * @param scan  the scanner for reading user input
+   * @throws IOException           if there is an error with I/O operations
+   * @throws QuitException         if the user chooses to quit
+   * @throws IllegalStateException if no input is available
+   */
+  private &lt;C extends Card&gt; void processGameCommand(KlondikeModel&lt;C&gt; model,
+                                                   KlondikeTextualView view,
+                                                   Scanner scan)
+      throws IOException, QuitException {
+<span class="fc bfc" id="L108" title="All 2 branches covered.">    if (!scan.hasNext()) {</span>
+<span class="fc" id="L109">      throw new IllegalStateException(&quot;No input provided&quot;);</span>
+    }
+
+<span class="fc" id="L112">    String command = scan.next();</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">    if (command.equalsIgnoreCase(&quot;q&quot;)) {</span>
+<span class="fc" id="L114">      throw new QuitException();</span>
+    }
+
+    try {
+<span class="fc" id="L118">      executeCommand(model, view, scan, command);</span>
+<span class="fc" id="L119">    } catch (IllegalArgumentException | IllegalStateException e) {</span>
+<span class="fc" id="L120">      ap.append(&quot;Invalid move. Play again. &quot;).append(e.getMessage()).append(&quot;\n&quot;);</span>
+<span class="fc" id="L121">    }</span>
+<span class="fc" id="L122">  }</span>
+
+  /**
+   * Executes a specific game command based on the command string.
+   * Commands supported:
+   * - mpp: Move cards from pile to pile
+   * - md: Move card from draw pile to cascade pile
+   * - mpf: Move card from cascade pile to foundation
+   * - mdf: Move card from draw pile to foundation
+   * - dd: Discard the current draw card
+   *
+   * @param &lt;C&gt;     the card type
+   * @param model   the game model
+   * @param view    the textual view for rendering
+   * @param scan    the scanner for reading command parameters
+   * @param command the command string to execute
+   * @throws IOException              if there is an error with I/O operations
+   * @throws QuitException            if the user chooses to quit while entering parameters
+   * @throws IllegalArgumentException if the command is unknown
+   */
+  private &lt;C extends Card&gt; void executeCommand(KlondikeModel&lt;C&gt; model,
+                                               KlondikeTextualView view,
+                                               Scanner scan,
+                                               String command)
+      throws IOException, QuitException {
+<span class="fc bfc" id="L147" title="All 6 branches covered.">    switch (command.toLowerCase()) {</span>
+      case &quot;mpp&quot;:
+<span class="fc" id="L149">        int sourcePile = readNextInt(scan);</span>
+<span class="fc" id="L150">        int cardsToMove = readNextInt(scan);</span>
+<span class="fc" id="L151">        int cascadePile = readNextInt(scan);</span>
+<span class="nc" id="L152">        executePileToPile(model, sourcePile, cardsToMove, cascadePile, view);</span>
+<span class="nc" id="L153">        break;</span>
+      case &quot;md&quot;:
+<span class="fc" id="L155">        int cascadePileForDraw = readNextInt(scan);</span>
+<span class="nc" id="L156">        executeDrawToPile(model, cascadePileForDraw, view);</span>
+<span class="nc" id="L157">        break;</span>
+      case &quot;mpf&quot;:
+<span class="fc" id="L159">        int cascadePileIndex = readNextInt(scan);</span>
+<span class="fc" id="L160">        int foundationPileIndex = readNextInt(scan);</span>
+<span class="fc" id="L161">        executePileToFoundation(model, cascadePileIndex, foundationPileIndex, view);</span>
+<span class="fc" id="L162">        break;</span>
+      case &quot;mdf&quot;:
+<span class="fc" id="L164">        int foundationIndex = readNextInt(scan);</span>
+<span class="nc" id="L165">        executeDrawToFoundation(model, foundationIndex, view);</span>
+<span class="nc" id="L166">        break;</span>
+      case &quot;dd&quot;:
+<span class="fc" id="L168">        executeDiscardDraw(model, view);</span>
+<span class="fc" id="L169">        break;</span>
+      default:
+<span class="fc" id="L171">        throw new IllegalArgumentException(&quot;Unknown command.&quot;);</span>
+    }
+<span class="fc" id="L173">  }</span>
+
+  /**
+   * Handles the quit action by displaying the final game state and score.
+   *
+   * @param &lt;C&gt;   the card type
+   * @param model the game model
+   * @param view  the textual view for rendering
+   * @throws IllegalStateException if output transmission fails
+   */
+  private &lt;C extends Card&gt; void handleQuit(KlondikeModel&lt;C&gt; model,
+                                           KlondikeTextualView view)
+      throws IllegalStateException {
+    try {
+<span class="fc" id="L187">      ap.append(&quot;Game quit!\n&quot;);</span>
+<span class="fc" id="L188">      ap.append(&quot;State of game when quit:\n&quot;);</span>
+<span class="fc" id="L189">      view.render();</span>
+<span class="fc" id="L190">      ap.append(&quot;\n&quot;);</span>
+<span class="fc" id="L191">      ap.append(&quot;Score: &quot;).append(String.valueOf(model.getScore())).append(&quot;\n&quot;);</span>
+<span class="nc" id="L192">    } catch (IOException ex) {</span>
+<span class="nc" id="L193">      throw new IllegalStateException(&quot;Failed to transmit output&quot;);</span>
+<span class="fc" id="L194">    }</span>
+<span class="fc" id="L195">  }</span>
+
+  /**
+   * Displays the end game state, including the final score and win/loss message.
+   *
+   * @param &lt;C&gt;   the card type
+   * @param model the game model
+   * @param view  the textual view for rendering
+   * @throws IllegalStateException if output transmission fails
+   */
+  private &lt;C extends Card&gt; void displayGameEnd(KlondikeModel&lt;C&gt; model,
+                                               KlondikeTextualView view)
+      throws IllegalStateException {
+    try {
+<span class="nc bnc" id="L209" title="All 2 branches missed.">      if (isWinCondition(model)) {</span>
+<span class="nc" id="L210">        ap.append(&quot;You win!\n&quot;);</span>
+      } else {
+<span class="nc" id="L212">        ap.append(&quot;Game over. Score: &quot;).append(String.valueOf(model.getScore())).append(&quot;\n&quot;);</span>
+      }
+<span class="nc" id="L214">    } catch (IOException e) {</span>
+<span class="nc" id="L215">      throw new IllegalStateException(&quot;Failed to transmit output&quot;);</span>
+<span class="nc" id="L216">    }</span>
+<span class="nc" id="L217">  }</span>
+
+  /**
+   * Checks if the player has won the game.
+   * A win occurs when all cascade piles are empty and the draw pile is empty.
+   *
+   * @param &lt;C&gt;   the card type
+   * @param model the game model to check
+   * @return true if the player has won, false otherwise
+   */
+  private &lt;C extends Card&gt; boolean isWinCondition(KlondikeModel&lt;C&gt; model) {
+<span class="nc" id="L228">    boolean allCascadeEmpty = true;</span>
+<span class="nc bnc" id="L229" title="All 2 branches missed.">    for (int i = 0; i &lt; model.getNumPiles(); i++) {</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">      if (model.getPileHeight(i) &gt; 0) {</span>
+<span class="nc" id="L231">        allCascadeEmpty = false;</span>
+<span class="nc" id="L232">        break;</span>
+      }
+    }
+<span class="nc bnc" id="L235" title="All 4 branches missed.">    return allCascadeEmpty &amp;&amp; model.getDrawCards().isEmpty();</span>
+  }
+
+  /**
+   * Renders the current game state, including the board layout and score.
+   *
+   * @param &lt;C&gt;   the card type
+   * @param model the game model
+   * @param view  the textual view for rendering
+   * @throws IllegalStateException if output transmission fails
+   */
+  private &lt;C extends Card&gt; void renderGameState(KlondikeModel&lt;C&gt; model,
+                                                KlondikeTextualView view)
+      throws IllegalStateException {
+    try {
+<span class="fc" id="L250">      view.render();</span>
+<span class="fc" id="L251">      ap.append(&quot;\n&quot;);</span>
+<span class="fc" id="L252">      ap.append(&quot;Score: &quot;).append(String.valueOf(model.getScore())).append(&quot;\n&quot;);</span>
+<span class="nc" id="L253">    } catch (IOException e) {</span>
+<span class="nc" id="L254">      throw new IllegalStateException(&quot;Failed to transmit output&quot;);</span>
+<span class="fc" id="L255">    }</span>
+<span class="fc" id="L256">  }</span>
+
+  /**
+   * Executes the discard draw command.
+   * Discards the current draw card and renders the updated game state.
+   *
+   * @param &lt;C&gt;   the card type
+   * @param model the game model
+   * @param view  the textual view for rendering
+   * @throws IOException if rendering fails
+   */
+  private &lt;C extends Card&gt; void executeDiscardDraw(KlondikeModel&lt;C&gt; model,
+                                                   KlondikeTextualView view)
+      throws IOException {
+<span class="fc" id="L270">    model.discardDraw();</span>
+<span class="fc" id="L271">    renderGameState(model, view);</span>
+<span class="fc" id="L272">  }</span>
+
+  /**
+   * Executes a move from the draw pile to a foundation pile.
+   * Moves the top draw card to the specified foundation pile (1-indexed from user).
+   *
+   * @param &lt;C&gt;             the card type
+   * @param model           the game model
+   * @param foundationIndex the foundation pile index (1-indexed from user input)
+   * @param view            the textual view for rendering
+   * @throws IOException if rendering fails
+   */
+  private &lt;C extends Card&gt; void executeDrawToFoundation(KlondikeModel&lt;C&gt; model,
+                                                        int foundationIndex,
+                                                        KlondikeTextualView view)
+      throws IOException {
+<span class="nc" id="L288">    model.moveDrawToFoundation(foundationIndex - 1);</span>
+<span class="nc" id="L289">    renderGameState(model, view);</span>
+<span class="nc" id="L290">  }</span>
+
+  /**
+   * Executes a move from a cascade pile to a foundation pile.
+   * Moves the top card of the specified cascade pile to the specified foundation pile.
+   *
+   * @param &lt;C&gt;                 the card type
+   * @param model               the game model
+   * @param cascadePileIndex    the source cascade pile index (1-indexed from user input)
+   * @param foundationPileIndex the destination foundation pile index (1-indexed from user input)
+   * @param view                the textual view for rendering
+   * @throws IOException if rendering fails
+   */
+  private &lt;C extends Card&gt; void executePileToFoundation(KlondikeModel&lt;C&gt; model,
+                                                        int cascadePileIndex,
+                                                        int foundationPileIndex,
+                                                        KlondikeTextualView view)
+      throws IOException {
+<span class="fc" id="L308">    model.moveToFoundation(cascadePileIndex - 1, foundationPileIndex - 1);</span>
+<span class="fc" id="L309">    renderGameState(model, view);</span>
+<span class="fc" id="L310">  }</span>
+
+  /**
+   * Executes a move from the draw pile to a cascade pile.
+   * Moves the top draw card to the specified cascade pile.
+   *
+   * @param &lt;C&gt;                the card type
+   * @param model              the game model
+   * @param cascadePileForDraw the destination cascade pile index (1-indexed from user input)
+   * @param view               the textual view for rendering
+   * @throws IOException if rendering fails
+   */
+  private &lt;C extends Card&gt; void executeDrawToPile(KlondikeModel&lt;C&gt; model,
+                                                  int cascadePileForDraw,
+                                                  KlondikeTextualView view)
+      throws IOException {
+<span class="nc" id="L326">    model.moveDraw(cascadePileForDraw - 1);</span>
+<span class="nc" id="L327">    renderGameState(model, view);</span>
+<span class="nc" id="L328">  }</span>
+
+  /**
+   * Executes a move of multiple cards from one cascade pile to another.
+   * Moves the specified number of cards from the source pile to the destination pile.
+   *
+   * @param &lt;C&gt;         the card type
+   * @param model       the game model
+   * @param sourcePile  the source cascade pile index (1-indexed from user input)
+   * @param cardsToMove the number of cards to move
+   * @param cascadePile the destination cascade pile index (1-indexed from user input)
+   * @param view        the textual view for rendering
+   * @throws IOException if rendering fails
+   */
+  private &lt;C extends Card&gt; void executePileToPile(KlondikeModel&lt;C&gt; model,
+                                                  int sourcePile,
+                                                  int cardsToMove,
+                                                  int cascadePile,
+                                                  KlondikeTextualView view)
+      throws IOException {
+<span class="nc" id="L348">    model.movePile(sourcePile - 1, cardsToMove, cascadePile - 1);</span>
+<span class="nc" id="L349">    renderGameState(model, view);</span>
+<span class="nc" id="L350">  }</span>
+
+  /**
+   * Starts a new game with the specified parameters.
+   * Initializes the model with the given deck and game configuration.
+   *
+   * @param &lt;C&gt;     the card type
+   * @param model   the game model to initialize
+   * @param deck    the deck of cards to use
+   * @param shuffle whether to shuffle the deck
+   * @param numRows the number of cascade piles
+   * @param numDraw the number of draw cards visible at once
+   * @throws IllegalStateException if the game cannot be started with the given parameters
+   */
+  private &lt;C extends Card&gt; void startGame(KlondikeModel&lt;C&gt; model,
+                                          List&lt;C&gt; deck,
+                                          boolean shuffle,
+                                          int numRows,
+                                          int numDraw) {
+    try {
+<span class="fc" id="L370">      model.startGame(deck, shuffle, numRows, numDraw);</span>
+<span class="fc" id="L371">    } catch (IllegalArgumentException | IllegalStateException e) {</span>
+<span class="fc" id="L372">      throw new IllegalStateException(&quot;Cannot start game&quot;);</span>
+<span class="fc" id="L373">    }</span>
+<span class="fc" id="L374">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

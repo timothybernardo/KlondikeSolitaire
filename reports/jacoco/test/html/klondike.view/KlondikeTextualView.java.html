@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KlondikeTextualView.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">easygo</a> &gt; <a href="index.source.html" class="el_package">klondike.view</a> &gt; <span class="el_source">KlondikeTextualView.java</span></div><h1>KlondikeTextualView.java</h1><pre class="source lang-java linenums">package klondike.view;
+
+import java.io.IOException;
+import java.util.List;
+import klondike.model.hw02.Card;
+import klondike.model.hw02.KlondikeModel;
+
+/**
+ * A textual view for displaying the state of a Klondike Solitaire game.
+ * Shows a game board as a string showing draw cards, foundation piles, and cascade piles.
+ */
+public class KlondikeTextualView implements TextualView {
+  private final KlondikeModel&lt;?&gt; model;
+  private final Appendable log;
+
+  /**
+   * Constructs a textual view for the Klondike Model given.
+   *
+   * @param model the game model to display
+   */
+<span class="nc" id="L21">  public KlondikeTextualView(KlondikeModel&lt;?&gt; model) {</span>
+<span class="nc" id="L22">    this.model = model;</span>
+<span class="nc" id="L23">    this.log = null; // no appendable provided</span>
+<span class="nc" id="L24">  }</span>
+
+  /**
+   * Constructs a textual view with a specified output destination.
+   *
+   * @param model the game model to display
+   * @param log the Appendable to write the view to
+   */
+<span class="fc" id="L32">  public KlondikeTextualView(KlondikeModel&lt;?&gt; model, Appendable log) {</span>
+<span class="fc" id="L33">    this.model = model;</span>
+<span class="fc" id="L34">    this.log = log;</span>
+<span class="fc" id="L35">  }</span>
+
+  /**
+   * Returns the current game state as a string.
+   * Returns an empty string if the game has not been started.
+   *
+   * @return a string representation of the game board
+   */
+  @Override
+  public String toString() {
+    try {
+<span class="fc" id="L46">      model.getNumPiles();</span>
+<span class="nc" id="L47">    } catch (IllegalStateException e) {</span>
+<span class="nc" id="L48">      return &quot;&quot;;</span>
+<span class="fc" id="L49">    }</span>
+<span class="fc" id="L50">    StringBuilder gameBoard = new StringBuilder();</span>
+<span class="fc" id="L51">    drawLine(gameBoard);</span>
+<span class="fc" id="L52">    foundationLine(gameBoard);</span>
+<span class="fc" id="L53">    cascadePiles(gameBoard);</span>
+<span class="fc" id="L54">    return gameBoard.toString();</span>
+  }
+
+  /**
+   * Creates a draw pile line to the string builder.
+   * Shows visible draw cards, all separated by commas.
+   *
+   * @param board the string builder to append to, representing the game board
+   */
+  private void drawLine(StringBuilder board) {
+<span class="fc" id="L64">    board.append(&quot;Draw: &quot;);</span>
+<span class="fc" id="L65">    List&lt;?&gt; drawCards = model.getDrawCards();</span>
+
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">    if (!drawCards.isEmpty()) {</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">      for (int i = 0; i &lt; drawCards.size(); i++) {</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (i &gt; 0) {</span>
+<span class="fc" id="L70">          board.append(&quot;, &quot;);</span>
+        }
+<span class="fc" id="L72">        board.append(drawCards.get(i).toString());</span>
+      }
+    }
+<span class="fc" id="L75">    board.append(&quot;\n&quot;);</span>
+<span class="fc" id="L76">  }</span>
+
+  /**
+   * Creates the foundation piles line to the string builder
+   * Shows foundation piles, all separated by commas.
+   *
+   * @param board the string builder to append to, representing the game board
+   */
+  private void foundationLine(StringBuilder board) {
+<span class="fc" id="L85">    board.append(&quot;Foundation: &quot;);</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">    for (int i = 0; i &lt; model.getNumFoundations(); i++) {</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">      if (i &gt; 0) {</span>
+<span class="fc" id="L88">        board.append(&quot;, &quot;);</span>
+      }
+<span class="fc" id="L90">      Card topCard = model.getCardAt(i);</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">      if (topCard == null) {</span>
+<span class="fc" id="L92">        board.append(&quot;&lt;none&gt;&quot;);</span>
+      } else {
+<span class="fc" id="L94">        board.append(topCard.toString());</span>
+      }
+    }
+<span class="fc" id="L97">    board.append(&quot;\n&quot;);</span>
+<span class="fc" id="L98">  }</span>
+
+  /**
+   * Creates the cascade piles lien to the string builder.
+   * Each card position is 3 characters wide with right-alignment.
+   *
+   * @param board the string builder to append to, representing the game board
+   */
+  private void cascadePiles(StringBuilder board) {
+<span class="fc" id="L107">    int numRows = model.getNumRows();</span>
+<span class="fc" id="L108">    int numPiles = model.getNumPiles();</span>
+
+<span class="fc bfc" id="L110" title="All 2 branches covered.">    for (int row = 0; row &lt; numRows; row++) {</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">      for (int pile = 0; pile &lt; numPiles; pile++) {</span>
+<span class="fc" id="L112">        String cardStr = getCardAtPosition(pile, row);</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (cardStr.length() == 1) {</span>
+<span class="fc" id="L114">          board.append(&quot;  &quot;).append(cardStr); // 2 spaces + card</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">        } else if (cardStr.length() == 2) {</span>
+<span class="fc" id="L116">          board.append(&quot; &quot;).append(cardStr);  // 1 space + card</span>
+        } else {
+<span class="fc" id="L118">          board.append(cardStr); // 3 chars</span>
+        }
+      }
+      // newline except for last line
+<span class="fc bfc" id="L122" title="All 2 branches covered.">      if (row &lt; numRows - 1) {</span>
+<span class="fc" id="L123">        board.append(&quot;\n&quot;);</span>
+      }
+    }
+<span class="fc" id="L126">  }</span>
+
+  /**
+   * Gets the string representation of a card at a specific position
+   * Returns &quot;?&quot; for face-down cards, &quot;X&quot; for empty piles, or the card's string value.
+   *
+   * @param pile the pile index
+   * @param row  the row index
+   * @return a string representation of the card at the position
+   */
+  private String getCardAtPosition(int pile, int row) {
+<span class="fc" id="L137">    int pileHeight = model.getPileHeight(pile);</span>
+<span class="fc bfc" id="L138" title="All 4 branches covered.">    if (pileHeight == 0 &amp;&amp; row == 0) {</span>
+<span class="fc" id="L139">      return &quot; X&quot;; // show x at row 0 for empty piles!</span>
+    }
+<span class="fc bfc" id="L141" title="All 2 branches covered.">    if (row &gt;= pileHeight) { // check if position is beyond pile height!</span>
+<span class="fc" id="L142">      return &quot;   &quot;; // 3 spaces for empty position</span>
+    }
+<span class="fc bfc" id="L144" title="All 2 branches covered.">    if (model.isCardVisible(pile, row)) {</span>
+<span class="fc" id="L145">      return model.getCardAt(pile, row).toString();</span>
+    } else {
+<span class="fc" id="L147">      return &quot;?&quot;;</span>
+    }
+  }
+
+  @Override
+  public void render() throws IOException {
+<span class="pc bpc" id="L153" title="1 of 2 branches missed.">    if (log != null) {</span>
+<span class="fc" id="L154">      log.append(this.toString());</span>
+    }
+<span class="fc" id="L156">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

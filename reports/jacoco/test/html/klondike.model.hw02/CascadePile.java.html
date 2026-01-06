@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CascadePile.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">easygo</a> &gt; <a href="index.source.html" class="el_package">klondike.model.hw02</a> &gt; <span class="el_source">CascadePile.java</span></div><h1>CascadePile.java</h1><pre class="source lang-java linenums">package klondike.model.hw02;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * A class representing a cascade pile in the Klondike game.
+ * Manages cards and if visible in the cascade pile.
+ */
+public class CascadePile implements Pile {
+  private final List&lt;Card&gt; cards;
+  private final List&lt;Boolean&gt; isVisible;
+
+  /**
+   * Creates an empty cascade pile.
+   */
+<span class="fc" id="L17">  public CascadePile() {</span>
+<span class="fc" id="L18">    this.cards = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L19">    this.isVisible = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L20">  }</span>
+
+  /**
+   * Adds a card to the bottom of the cascade pile.
+   * Adds whether the card is visible or not to a visibility array that is parallel
+   * to the cascade pile.
+   *
+   * @param card the card that is added to the cascade pile
+   */
+  @Override
+  public void addCard(Card card) throws IllegalArgumentException {
+<span class="nc bnc" id="L31" title="All 2 branches missed.">    if (card == null) {</span>
+<span class="nc" id="L32">      throw new IllegalArgumentException(&quot;Card cannot be null&quot;);</span>
+    }
+<span class="nc" id="L34">    addCard(card, true);</span>
+<span class="nc" id="L35">  }</span>
+
+  /**
+   * Adds a card to the cascade pile with specified visibility.
+   *
+   * @param card    the card to add
+   * @param visible true if the card should be face-up, false if face-down
+   * @throws IllegalArgumentException if the card is null
+   */
+  public void addCard(Card card, boolean visible) throws IllegalArgumentException {
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">    if (card == null) {</span>
+<span class="nc" id="L46">      throw new IllegalArgumentException(&quot;Card cannot be null&quot;);</span>
+    }
+<span class="fc" id="L48">    cards.add(card);</span>
+<span class="fc" id="L49">    isVisible.add(visible);</span>
+<span class="fc" id="L50">  }</span>
+
+  /**
+   * Removes card from the bottom of the pile. If removed the last visible card and there are still
+   * cards left, make the new bottom card visible. Returns removed card from pile.
+   *
+   * @return removed card
+   * @throws IllegalStateException if the pile is empty
+   */
+  @Override
+  public Card removeCard() throws IllegalStateException {
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">    if (isEmpty()) {</span>
+<span class="nc" id="L62">      throw new IllegalStateException(&quot;Cannot remove from empty pile&quot;);</span>
+    }
+<span class="fc" id="L64">    Card removed = cards.removeLast();</span>
+<span class="fc" id="L65">    isVisible.removeLast();</span>
+
+<span class="pc bpc" id="L67" title="1 of 4 branches missed.">    if (!isEmpty() &amp;&amp; !hasVisibleCards()) {</span>
+<span class="nc" id="L68">      isVisible.set(isVisible.size() - 1, true);</span>
+    }
+
+<span class="fc" id="L71">    return removed;</span>
+  }
+
+  /**
+   * Removes the specified number of cards from the bottom of the pile
+   * Flips the new bottom card, if exists, if all visible cards are removed.
+   *
+   * @param numCards the number of cards to remove
+   * @throws IllegalArgumentException if numCards exceeds pile size
+   */
+  public List&lt;Card&gt; removeCards(int numCards) throws IllegalArgumentException {
+<span class="nc bnc" id="L82" title="All 2 branches missed.">    if (numCards &lt; 0) {</span>
+<span class="nc" id="L83">      throw new IllegalArgumentException(&quot;Number of cards cannot be negative&quot;);</span>
+    }
+<span class="nc bnc" id="L85" title="All 2 branches missed.">    if (numCards &gt; size()) {</span>
+<span class="nc" id="L86">      throw new IllegalArgumentException(&quot;Cannot remove &quot; + numCards</span>
+<span class="nc" id="L87">          + &quot; cards from pile with only &quot; + size() + &quot; cards&quot;);</span>
+    }
+
+<span class="nc" id="L90">    List&lt;Card&gt; removed = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">    for (int i = 0; i &lt; numCards; i++) {</span>
+<span class="nc" id="L92">      removed.addFirst(removeCard());</span>
+    }
+<span class="nc" id="L94">    return removed;</span>
+  }
+
+  @Override
+  public Card getCardAt(int index) throws IllegalArgumentException {
+<span class="pc bpc" id="L99" title="2 of 4 branches missed.">    if (index &lt; 0 || index &gt;= cards.size()) {</span>
+<span class="nc" id="L100">      throw new IllegalArgumentException(&quot;Invalid index: &quot; + index);</span>
+    }
+<span class="fc" id="L102">    return cards.get(index);</span>
+  }
+
+  /**
+   * Checks if the card at the specified index is visible.
+   *
+   * @param index the index of the card
+   * @return true if the card is visible, false otherwise
+   * @throws IllegalArgumentException if the index is invalid
+   */
+  public boolean isCardVisible(int index) throws IllegalArgumentException {
+<span class="pc bpc" id="L113" title="2 of 4 branches missed.">    if (index &lt; 0 || index &gt;= isVisible.size()) {</span>
+<span class="nc" id="L114">      throw new IllegalArgumentException(&quot;Invalid index: &quot; + index);</span>
+    }
+<span class="fc" id="L116">    return isVisible.get(index);</span>
+  }
+
+  /**
+   * Gets the bottommost visible card in the pile.
+   *
+   * @return the bottommost visible card
+   * @throws IllegalStateException if there are no visible cards
+   */
+  public Card getBottomVisibleCard() throws IllegalStateException {
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">    for (int i = cards.size() - 1; i &gt;= 0; i--) {</span>
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">      if (isVisible.get(i)) {</span>
+<span class="fc" id="L128">        return cards.get(i);</span>
+      }
+    }
+<span class="nc" id="L131">    throw new IllegalStateException(&quot;No visible cards in pile&quot;);</span>
+  }
+
+  /**
+   * Checks if the pile has any visible cards.
+   *
+   * @return true if there are visible cards, false otherwise
+   */
+  private boolean hasVisibleCards() {
+<span class="pc bpc" id="L140" title="1 of 2 branches missed.">    for (Boolean isVisible : isVisible) {</span>
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">      if (isVisible) {</span>
+<span class="fc" id="L142">        return true;</span>
+      }
+<span class="nc" id="L144">    }</span>
+<span class="nc" id="L145">    return false;</span>
+  }
+
+  /**
+   * Gets a list of visible cards in the pile.
+   *
+   * @return a list of visible cards
+   */
+  public List&lt;Card&gt; getVisibleCards() {
+<span class="nc" id="L154">    List&lt;Card&gt; visibleCards = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">    for (int i = 0; i &lt; cards.size(); i++) {</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">      if (isVisible.get(i)) {</span>
+<span class="nc" id="L157">        visibleCards.add(cards.get(i));</span>
+      }
+    }
+<span class="nc" id="L160">    return visibleCards;</span>
+  }
+
+  @Override
+  public int size() {
+<span class="fc" id="L165">    return cards.size();</span>
+  }
+
+  @Override
+  public boolean isEmpty() {
+<span class="fc" id="L170">    return cards.isEmpty();</span>
+  }
+
+  @Override
+  public List&lt;Card&gt; getCards() {
+<span class="nc" id="L175">    return new ArrayList&lt;&gt;(cards);</span>
+  }
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

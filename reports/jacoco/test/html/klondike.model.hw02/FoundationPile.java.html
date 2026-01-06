@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FoundationPile.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">easygo</a> &gt; <a href="index.source.html" class="el_package">klondike.model.hw02</a> &gt; <span class="el_source">FoundationPile.java</span></div><h1>FoundationPile.java</h1><pre class="source lang-java linenums">package klondike.model.hw02;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * A class representing a foundation pile in Klondike Solitaire.
+ * Foundation piles accept cards starting with Ace and building up to King in the same suit.
+ */
+public class FoundationPile implements Pile {
+  private final List&lt;Card&gt; cards;
+  private Suit suit;
+
+  /**
+   * Creates an empty foundation pile.
+   */
+<span class="fc" id="L17">  public FoundationPile() {</span>
+<span class="fc" id="L18">    this.cards = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L19">    this.suit = null;</span>
+<span class="fc" id="L20">  }</span>
+
+  /**
+   * Adds card to the foundation pile.
+   * Cards are added only if they are the same suit and one value higher than the top card.
+   * Aces can only be placed on empty foundation piles.
+   *
+   * @param card the card to add
+   * @throws IllegalArgumentException if card is null or invalid
+   * @throws IllegalStateException    if card is not an Ace and placed on empty foundation, card is
+   *                                  not the same suit, or card is not one value higher than the
+   *                                  top card
+   */
+  @Override
+  public void addCard(Card card) throws IllegalArgumentException, IllegalStateException {
+<span class="pc bpc" id="L35" title="1 of 2 branches missed.">    if (card == null) {</span>
+<span class="nc" id="L36">      throw new IllegalArgumentException(&quot;Card cannot be null&quot;);</span>
+    }
+
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">    if (!(card instanceof PlayingCard playingCard)) {</span>
+<span class="nc" id="L40">      throw new IllegalArgumentException(&quot;Invalid card type&quot;);</span>
+    }
+
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">    if (isEmpty()) {</span>
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">      if (playingCard.getValueEnum() != Value.ACE) {</span>
+<span class="nc" id="L45">        throw new IllegalStateException(&quot;Only Aces can be placed on empty foundations&quot;);</span>
+      }
+<span class="fc" id="L47">      this.suit = playingCard.getSuitEnum();</span>
+    } else {
+
+<span class="nc" id="L50">      PlayingCard topCard = (PlayingCard) cards.getLast();</span>
+
+<span class="nc bnc" id="L52" title="All 2 branches missed.">      if (playingCard.getSuitEnum() != this.suit) {</span>
+<span class="nc" id="L53">        throw new IllegalStateException(&quot;Card must be same suit as foundation pile&quot;);</span>
+      }
+
+<span class="nc bnc" id="L56" title="All 2 branches missed.">      if (playingCard.getValue() != topCard.getValue() + 1) {</span>
+<span class="nc" id="L57">        throw new IllegalStateException(&quot;Card must be one value higher than top card&quot;);</span>
+      }
+    }
+
+<span class="fc" id="L61">    cards.add(card);</span>
+<span class="fc" id="L62">  }</span>
+
+  @Override
+  public Card removeCard() throws IllegalStateException {
+<span class="nc bnc" id="L66" title="All 2 branches missed.">    if (isEmpty()) {</span>
+<span class="nc" id="L67">      throw new IllegalStateException(&quot;Cannot remove from empty foundation pile&quot;);</span>
+    }
+
+<span class="nc" id="L70">    Card removed = cards.removeLast();</span>
+
+    // if pile empty, reset the suit
+<span class="nc bnc" id="L73" title="All 2 branches missed.">    if (isEmpty()) {</span>
+<span class="nc" id="L74">      this.suit = null;</span>
+    }
+
+<span class="nc" id="L77">    return removed;</span>
+  }
+
+  @Override
+  public Card getCardAt(int index) throws IllegalArgumentException {
+<span class="nc bnc" id="L82" title="All 4 branches missed.">    if (index &lt; 0 || index &gt;= cards.size()) {</span>
+<span class="nc" id="L83">      throw new IllegalArgumentException(&quot;Invalid index: &quot; + index);</span>
+    }
+<span class="nc" id="L85">    return cards.get(index);</span>
+  }
+
+  /**
+   * Gets the top card of the foundation pile without removing it.
+   *
+   * @return the top card, or null if pile is empty
+   */
+  public Card getTopCard() {
+<span class="fc bfc" id="L94" title="All 2 branches covered.">    if (isEmpty()) {</span>
+<span class="fc" id="L95">      return null;</span>
+    }
+<span class="fc" id="L97">    return cards.getLast();</span>
+  }
+
+  @Override
+  public int size() {
+<span class="nc" id="L102">    return cards.size();</span>
+  }
+
+  @Override
+  public boolean isEmpty() {
+<span class="fc" id="L107">    return cards.isEmpty();</span>
+  }
+
+  @Override
+  public List&lt;Card&gt; getCards() {
+<span class="nc" id="L112">    return new ArrayList&lt;&gt;(cards);</span>
+  }
+
+  /**
+   * Gets the suit this foundation pile accepts.
+   *
+   * @return the suit, or null if pile is empty
+   */
+  public Suit getSuit() {
+<span class="nc" id="L121">    return suit;</span>
+  }
+
+  /**
+   * Checks if a card can be legally added to this foundation pile.
+   *
+   * @param card the card to check
+   * @return true if the card can be added, false otherwise
+   */
+  public boolean canAddCard(Card card) {
+<span class="pc bpc" id="L131" title="2 of 4 branches missed.">    if (card == null || !(card instanceof PlayingCard playingCard)) {</span>
+<span class="nc" id="L132">      return false;</span>
+    }
+
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">    if (isEmpty()) {</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">      return playingCard.getValueEnum() == Value.ACE;</span>
+    }
+
+<span class="nc" id="L139">    PlayingCard topCard = (PlayingCard) getTopCard();</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">    return playingCard.getSuitEnum() == this.suit</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        &amp;&amp; playingCard.getValue() == topCard.getValue() + 1;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

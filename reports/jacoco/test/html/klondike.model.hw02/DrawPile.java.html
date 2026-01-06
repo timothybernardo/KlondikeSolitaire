@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DrawPile.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">easygo</a> &gt; <a href="index.source.html" class="el_package">klondike.model.hw02</a> &gt; <span class="el_source">DrawPile.java</span></div><h1>DrawPile.java</h1><pre class="source lang-java linenums">package klondike.model.hw02;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * A class representing a draw pile in the Klondike game.
+ * The draw pile holds cards that can be drawn and moved to cascade or foundation piles.
+ */
+public class DrawPile implements Pile {
+  private final List&lt;Card&gt; cards;
+  private final int numDraw;  // max cards visible
+
+  /**
+   * Creates an empty draw pile with specified draw count.
+   *
+   * @param numDraw the maximum number of cards that can be drawn at once
+   * @throws IllegalArgumentException if numDraw is less than or equal to 0
+   */
+<span class="fc" id="L20">  public DrawPile(int numDraw) {</span>
+<span class="pc bpc" id="L21" title="1 of 2 branches missed.">    if (numDraw &lt;= 0) {</span>
+<span class="nc" id="L22">      throw new IllegalArgumentException(&quot;Number of draw cards must be positive&quot;);</span>
+    }
+<span class="fc" id="L24">    this.cards = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L25">    this.numDraw = numDraw;</span>
+<span class="fc" id="L26">  }</span>
+
+  @Override
+  public void addCard(Card card) throws IllegalArgumentException {
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">    if (card == null) {</span>
+<span class="nc" id="L31">      throw new IllegalArgumentException(&quot;Card cannot be null&quot;);</span>
+    }
+<span class="fc" id="L33">    cards.add(card);</span>
+<span class="fc" id="L34">  }</span>
+
+  /**
+   * Adds multiple cards to the draw pile.
+   *
+   * @param cardsToAdd the list of cards to add
+   * @throws IllegalArgumentException if the list is null or contains null cards
+   */
+  public void addCards(List&lt;Card&gt; cardsToAdd) throws IllegalArgumentException {
+<span class="nc bnc" id="L43" title="All 2 branches missed.">    if (cardsToAdd == null) {</span>
+<span class="nc" id="L44">      throw new IllegalArgumentException(&quot;Card list cannot be null&quot;);</span>
+    }
+<span class="nc bnc" id="L46" title="All 2 branches missed.">    for (Card card : cardsToAdd) {</span>
+<span class="nc" id="L47">      addCard(card);</span>
+<span class="nc" id="L48">    }</span>
+<span class="nc" id="L49">  }</span>
+
+  /**
+   * Removes the first card from the draw pile.
+   *
+   * @return the removed card from the draw pile
+   * @throws IllegalStateException if the pile is empty
+   */
+  @Override
+  public Card removeCard() throws IllegalStateException {
+<span class="nc bnc" id="L59" title="All 2 branches missed.">    if (isEmpty()) {</span>
+<span class="nc" id="L60">      throw new IllegalStateException(&quot;Cannot remove from empty draw pile&quot;);</span>
+    }
+<span class="nc" id="L62">    return cards.removeFirst();  // Remove from top of draw pile</span>
+  }
+
+  /**
+   * Discards the top card by moving it to the bottom of the draw pile.
+   *
+   * @throws IllegalStateException if the pile is empty
+   */
+  public void discardTopCard() throws IllegalStateException {
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">    if (isEmpty()) {</span>
+<span class="nc" id="L72">      throw new IllegalStateException(&quot;Cannot discard from empty draw pile&quot;);</span>
+    }
+<span class="fc" id="L74">    Card topCard = cards.removeFirst();</span>
+<span class="fc" id="L75">    cards.add(topCard);</span>
+<span class="fc" id="L76">  }</span>
+
+  @Override
+  public Card getCardAt(int index) throws IllegalArgumentException {
+<span class="nc bnc" id="L80" title="All 4 branches missed.">    if (index &lt; 0 || index &gt;= cards.size()) {</span>
+<span class="nc" id="L81">      throw new IllegalArgumentException(&quot;Invalid index: &quot; + index);</span>
+    }
+<span class="nc" id="L83">    return cards.get(index);</span>
+  }
+
+  /**
+   * Gets the top card without removing it.
+   *
+   * @return the top card
+   * @throws IllegalStateException if the pile is empty
+   */
+  public Card getTopCard() throws IllegalStateException {
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">    if (isEmpty()) {</span>
+<span class="nc" id="L94">      throw new IllegalStateException(&quot;Draw pile is empty&quot;);</span>
+    }
+<span class="fc" id="L96">    return cards.getFirst();</span>
+  }
+
+  /**
+   * Gets the currently visible draw cards.
+   * The number of visible cards is limited by numDraw.
+   *
+   * @return a list of visible draw cards
+   */
+  public List&lt;Card&gt; getVisibleCards() {
+<span class="fc" id="L106">    List&lt;Card&gt; visible = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L107">    int count = Math.min(numDraw, cards.size());</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">    for (int i = 0; i &lt; count; i++) {</span>
+<span class="fc" id="L109">      visible.add(cards.get(i));</span>
+    }
+<span class="fc" id="L111">    return visible;</span>
+  }
+
+  @Override
+  public int size() {
+<span class="nc" id="L116">    return cards.size();</span>
+  }
+
+  @Override
+  public boolean isEmpty() {
+<span class="fc" id="L121">    return cards.isEmpty();</span>
+  }
+
+  @Override
+  public List&lt;Card&gt; getCards() {
+<span class="nc" id="L126">    return new ArrayList&lt;&gt;(cards);</span>
+  }
+
+  /**
+   * Gets the maximum number of cards that can be drawn at once.
+   *
+   * @return the number of draw cards
+   */
+  public int getNumDraw() {
+<span class="fc" id="L135">    return numDraw;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
