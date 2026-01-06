@@ -39,21 +39,23 @@ A variant with modified rules:
 
 ## 🚀 Usage
 
-Run the game from the command line:
+### Running in IntelliJ IDEA
 
-```bash
-# Basic Klondike with default settings (7 piles, 3 draw cards)
-java klondike.Klondike basic
+1. Open the project in IntelliJ
+2. Navigate to `Klondike.java` in the `klondike` package
+3. Right-click on the file → **Run 'Klondike.main()'**
+4. The first run will fail (no arguments) — this is expected
 
-# Basic Klondike with custom settings
-java klondike.Klondike basic 7 3
+**To add command-line arguments:**
 
-# Whitehead Klondike with 8 cascade piles
-java klondike.Klondike whitehead 8
-
-# Whitehead Klondike with 7 piles and 5 draw cards
-java klondike.Klondike whitehead 7 5
-```
+1. Go to **Run → Edit Configurations**
+2. Select the `Klondike` configuration
+3. In the **Program arguments** field, enter your arguments:
+   - `basic` — Basic Klondike with defaults
+   - `basic 7 3` — Basic with 7 piles, 3 draw cards
+   - `whitehead` — Whitehead Klondike with defaults
+   - `whitehead 8 5` — Whitehead with 8 piles, 5 draw cards
+4. Click **Apply** then **Run**
 
 ### Command-Line Arguments
 
